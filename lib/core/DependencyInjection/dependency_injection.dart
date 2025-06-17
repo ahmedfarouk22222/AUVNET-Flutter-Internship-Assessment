@@ -1,34 +1,33 @@
 import 'package:ecommerce/features/auth/data/datasources/firebase_auth_remote_data_source.dart';
 import 'package:ecommerce/features/auth/data/repositories/auth_repository_imp.dart';
+import 'package:ecommerce/features/auth/domain/repositories/auth_repository.dart';
 import 'package:ecommerce/features/auth/domain/usecases/login_user.dart';
 import 'package:ecommerce/features/auth/domain/usecases/register_user.dart';
+import 'package:ecommerce/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
-import '../../../features/auth/presentation/bloc/auth_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
+void setupLocator() {
+  print("Registering FirebaseAuth");
+  getIt.registerFactory<FirebaseAuth>(() => FirebaseAuth.instance);
 
-Future<void> setupLocator() async {
-  // Firebase Auth Instance
-  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
-
-  // Data Source
-  getIt.registerLazySingleton<FirebaseAuthRemoteDataSource>(
+  print("Registering FirebaseAuthRemoteDataSource");
+  getIt.registerFactory<FirebaseAuthRemoteDataSource>(
     () => FirebaseAuthRemoteDataSourceImpl(firebaseAuth: getIt()),
   );
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(
-      getIt<FirebaseAuth>(),
-      authRemoteDataSource: getIt<FirebaseAuthRemoteDataSource>(),
-    ),
+
+  print("Registering AuthRepository");
+  getIt.registerFactory<AuthRepository>(
+    () => AuthRepositoryImpl(getIt(), authRemoteDataSource: getIt()),
   );
 
-  // Use Cases
-  getIt.registerLazySingleton(() => LoginUser(getIt()));
-  getIt.registerLazySingleton(() => RegisterUser(getIt()));
+  print("Registering UseCases");
+  getIt.registerFactory<LoginUser>(() => LoginUser(getIt()));
+  getIt.registerFactory<RegisterUser>(() => RegisterUser(getIt()));
 
-  // Bloc
-  getIt.registerFactory(
+  print("Registering AuthBloc");
+  getIt.registerFactory<AuthBloc>(
     () => AuthBloc(loginUser: getIt(), registerUser: getIt()),
   );
 }

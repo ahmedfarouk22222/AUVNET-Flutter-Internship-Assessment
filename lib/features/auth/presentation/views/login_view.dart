@@ -1,5 +1,3 @@
-
-
 import 'package:ecommerce/core/constans/app_colors.dart';
 import 'package:ecommerce/core/routes/router.dart';
 import 'package:ecommerce/features/auth/presentation/bloc/auth_bloc.dart';
@@ -11,7 +9,6 @@ import 'package:ecommerce/features/auth/presentation/widgets/custom_textButton.d
 import 'package:ecommerce/features/auth/presentation/widgets/custome_textField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:go_router/go_router.dart';
 // باقي الـ imports
 
@@ -35,9 +32,9 @@ class LoginView extends StatelessWidget {
               // مثال على الانتقال:
               GoRouter.of(context).go(AppRouter.kHomeView);
             } else if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage!)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
             }
           },
           builder: (context, state) {
@@ -46,13 +43,20 @@ class LoginView extends StatelessWidget {
               children: [
                 const AuthViewImage(),
                 CustomeTextField(
-                  icon: const Icon(Icons.email),
+                  icon: const Icon(
+                    Icons.email_outlined,
+                    color: Color(0xffB4B4B4),
+                  ),
                   hint: 'Email',
                   onChanged: (value) => emailController.text = value,
                 ),
                 const SizedBox(height: 18),
                 CustomeTextField(
-                  icon: const Icon(Icons.lock),
+                  icon: const Icon(
+                    Icons.lock_outline,
+                    color: Color(0xffB4B4B4),
+                  ),
+                  obsecure: true,
                   hint: 'Password',
                   onChanged: (value) => passwordController.text = value,
                 ),
@@ -63,11 +67,11 @@ class LoginView extends StatelessWidget {
                         title: 'Log in',
                         ontap: () {
                           context.read<AuthBloc>().add(
-                                LoginEvent(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                ),
-                              );
+                            LoginEvent(
+                              email: emailController.text,
+                              password: passwordController.text,
+                            ),
+                          );
                         },
                       ),
                 const SizedBox(height: 10),

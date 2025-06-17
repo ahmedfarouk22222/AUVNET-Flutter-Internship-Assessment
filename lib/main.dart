@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
- await   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+  setupLocator();
+
   runApp(EcommerceApp());
 }
 
@@ -20,7 +21,7 @@ class EcommerceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt.get<AuthBloc>(),
+      create: (context) => getIt<AuthBloc>(),
       child: MaterialApp.router(
         routerConfig: AppRouter.router,
         // routerConfig: AppRouter.router,
